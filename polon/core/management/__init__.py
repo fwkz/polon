@@ -1,9 +1,13 @@
 import argparse
 
-from polon.core.management.polon_admin import start_project
+from polon.core.management.commands import start_project
 
 
-def main():
+def execute_admin_command():
+    """
+    Entry point for polon-admin.py utility. Execute proper admin command based on passed argv.
+    :return:
+    """
     parser = argparse.ArgumentParser(description='Admin utility tool.')
     parser.add_argument('--start-project', type=str, help='Start project.')
     args = parser.parse_args()

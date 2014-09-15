@@ -11,7 +11,7 @@ setup(
     description='Polon - test reactor.',
     scripts=["polon/core/management/polon-admin.py"],
     entry_points={
-        'console_scripts': ['polon-admin = polon.core.management:main']
+        'console_scripts': ['polon-admin = polon.core.management:execute_admin_command']
     },
     zip_safe=False,
 )

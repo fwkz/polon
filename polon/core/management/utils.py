@@ -2,6 +2,12 @@ import os
 
 
 def create_resource(name, content):
+    """
+    Creates resource directory in current working directory.
+    :param name: Name of the root directory of the resource
+    :param content: Content of the resource in form of dictionary ex. {"resource_name.py": template_path, "/test": None}
+    :return:
+    """
     root_path = os.path.join(os.getcwd(), name)
     os.mkdir(root_path)
     print("\nDirectory {path} sucessfully created.".format(path=root_path))
