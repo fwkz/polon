@@ -4,6 +4,11 @@ import argparse
 
 
 def execute_command(argument_values):
+    """
+    Entry point for manage.py utility. Execute proper manage.py command based on passed argv.
+    :param argument_values: sys.argv
+    :return:
+    """
     parser = argparse.ArgumentParser(description='Management tool.')
     parser.add_argument('--add-tests', type=str, nargs="*", help='Add tests to the project.')
     parser.add_argument('--settings', type=str, help='Declaring location of settings module.')
@@ -26,6 +31,7 @@ def execute_command(argument_values):
 def execute_admin_command(argument_values):
     """
     Entry point for polon-admin.py utility. Execute proper admin command based on passed argv.
+    :param argument_values: sys.argv
     :return:
     """
     parser = argparse.ArgumentParser(description='Admin utility tool.')
