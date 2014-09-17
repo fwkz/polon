@@ -11,13 +11,15 @@ def start_project(name):
     """
     from polon.core.management.templates import manage
 
-    project_directory_content = {
-        "settings.py": None,
-        "manage.py": os.path.abspath(manage.__file__.rstrip("c")),
-        "pages.py": None,
-    }
+    create_resource(name=name,
+                    content={"manage.py": os.path.abspath(manage.__file__.rstrip("c"))},
+                    context={"project_name": name},
+    )
 
-    create_resource(name, project_directory_content)
+    create_resource(name=os.path.join(name, name),
+                    content={"settings.py": None, "pages.py": None},
+                    python_package=True
+    )
 
 
 def add_tests(*names):
@@ -26,7 +28,7 @@ def add_tests(*names):
     :param names: Names of the tests that polon is going to create
     :return:
     """
-    create_resource("tests", {}, python_package=True)
+    create_resource("tests", python_package=True)
 
     test_directory_content = {
         "handlers.py": None,
