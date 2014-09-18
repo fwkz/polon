@@ -1,11 +1,10 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta, abstractmethod, abstractproperty
 
 
-class PageHandler:  # TODO Implement ABC to all handlers
+class PageHandler:
     __metaclass__ = ABCMeta
 
-    @property
-    @abstractmethod
+    @abstractproperty
     def page_object(self):
         """ Binds PageHandler to certain Page Object Model """
 

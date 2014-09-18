@@ -1,1 +1,2 @@
-__author__ = 'mkupidura'
+__all__ = ["manage",
+           "settings"]
