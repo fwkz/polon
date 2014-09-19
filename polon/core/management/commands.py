@@ -13,11 +13,11 @@ def start_project(name):
     :param name: Name of the project and it's directory
     :return:
     """
-    from polon.core.management import templates
+    from polon.core.management.templates import manage, settings
 
     root_directory_content = (
         Resource(name="manage.py",
-                 template_path=os.path.abspath(templates.manage.__file__.rstrip("c")),
+                 template_path=os.path.abspath(manage.__file__.rstrip("c")),
                  context={"project_name": name}),
     )
 
@@ -25,7 +25,7 @@ def start_project(name):
 
     project_directory_content = (
         Resource(name="settings.py",
-                 template_path=os.path.abspath(templates.settings.__file__.rstrip("c")),
+                 template_path=os.path.abspath(settings.__file__.rstrip("c")),
                  context={"project_name": name}),
         Resource(name="pages.py", template_path=None, context={}),
     )
