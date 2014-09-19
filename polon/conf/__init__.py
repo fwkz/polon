@@ -21,3 +21,5 @@ def load_settings():
                                    "You must define the environment variable {}".format(ENVIRONMENT_VARIABLE))
     settings_module = importlib.import_module(settings_module_path)
     return settings_module
+
+settings = load_settings()

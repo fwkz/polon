@@ -5,3 +5,5 @@ Want more information? Please visit
 https://github/fwkz/polon
 
 """
+
+PAGE_OBJECTS = "${project_name}.pages"
