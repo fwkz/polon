@@ -6,6 +6,4 @@ https://github/fwkz/polon
 
 """
 
-PAGE_OBJECTS = "${project_name}.pages"
-
-PAGE_OBJECTS_DIRS = ()
+PAGE_OBJECTS_MODULE = "${project_name}.pages"

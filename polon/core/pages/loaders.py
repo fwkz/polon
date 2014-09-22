@@ -7,6 +7,12 @@ from polon.core.pages import PowerPage
 
 
 def load_pages_from_module(path):
+    """ Page objects loader function.
+
+    Retrieve pages from given module.
+    :param path: Module dotted path.
+    :return: Set of retrieved pages.
+    """
     po_module = importlib.import_module(path)
     pages_set = {module[1] for module in getmembers(po_module, isclass)}
     pages_set = {class_ for class_ in pages_set if (issubclass(class_, PowerPage) and class_ is not PowerPage)}
@@ -14,6 +20,12 @@ def load_pages_from_module(path):
 
 
 def load_pages_from_package(page_object_dirs):
+    """ Page objects loader function.
+
+    Retrieve pages from given package.
+    :param page_object_dirs: Package dotted path.
+    :return: Set of retrieved pages.
+    """
     pages_set = set()
     for directory in page_object_dirs:
         package = importlib.import_module(directory)
@@ -25,6 +37,21 @@ def load_pages_from_package(page_object_dirs):
 
 
 def load_pages():
-    pages = load_pages_from_module(settings.PAGE_OBJECTS)
-    pages.update(load_pages_from_package(settings.PAGE_OBJECTS_DIRS))
+    """ Retrieve page objects from all over the project.
+
+    Iterate over dictionary of loader functions, executes them and collect what is returned.
+    :return: Set of retrieved pages that loader functions returns.
+    """
+    pages = set()
+    page_loaders = {"PAGE_OBJECTS_DIRS": load_pages_from_package,
+                    "PAGE_OBJECTS_MODULE": load_pages_from_module}
+
+    for loader_params, loader_function in page_loaders.iteritems():
+        try:
+            parameters = getattr(settings, loader_params)
+        except AttributeError:
+            continue
+
+        pages.update(loader_function(parameters))
+
     return pages

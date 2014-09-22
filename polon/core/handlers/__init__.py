@@ -2,6 +2,9 @@ from abc import ABCMeta, abstractmethod, abstractproperty
 
 
 class PageHandler:
+    """
+    Base class for page object handlers implemented using Abstract Base Classes.
+    """
     __metaclass__ = ABCMeta
 
     @abstractproperty

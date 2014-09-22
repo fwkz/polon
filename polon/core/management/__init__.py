@@ -4,8 +4,9 @@ import argparse
 
 
 def execute_command(argument_values):
-    """
-    Entry point for manage.py utility. Execute proper manage.py command based on passed argv.
+    """ Entry point for manage.py utility.
+
+    Execute proper manage.py command based on passed argv.
     :param argument_values: sys.argv
     :return:
     """
@@ -29,8 +30,9 @@ def execute_command(argument_values):
 
 
 def execute_admin_command(argument_values):
-    """
-    Entry point for polon-admin.py utility. Execute proper admin command based on passed argv.
+    """ Entry point for polon-admin.py utility.
+
+    Execute proper admin command based on passed argv.
     :param argument_values: sys.argv
     :return:
     """

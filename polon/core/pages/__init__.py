@@ -1,4 +1,7 @@
 class IdentifierAggregatorMetaclass(type):
+    """
+    Metaclass for Page object's base class that is aggregating *identifier* attribute from all parent classes.
+    """
     def __new__(cls, clsname, bases, dct):
         for base in bases:
             try:
@@ -11,6 +14,6 @@ class IdentifierAggregatorMetaclass(type):
 
 class PowerPage(object):
     """
-     Base class for Page Objects
+    Base class for Page Objects
     """
     __metaclass__ = IdentifierAggregatorMetaclass
