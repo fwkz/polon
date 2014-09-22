@@ -4,6 +4,7 @@ import pkgutil
 
 from polon.conf import settings
 from polon.core.pages import PowerPage
+from polon.core.exceptions import ImproperlyConfigured
 
 
 def load_pages_from_module(path):
@@ -45,13 +46,19 @@ def load_pages():
     pages = set()
     page_loaders = {"PAGE_OBJECTS_DIRS": load_pages_from_package,
                     "PAGE_OBJECTS_MODULE": load_pages_from_module}
+    err_count = 0
 
     for loader_params, loader_function in page_loaders.iteritems():
         try:
             parameters = getattr(settings, loader_params)
         except AttributeError:
+            err_count += 1
             continue
 
         pages.update(loader_function(parameters))
+
+    if err_count != len(page_loaders):
+        raise ImproperlyConfigured("Page objects configuration not found. "
+                                   "Please set PAGE_OBJECTS_DIRS or PAGE_OBJECTS_MODULE settings attribute.")
 
     return pages

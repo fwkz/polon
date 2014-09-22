@@ -8,9 +8,10 @@ ENVIRONMENT_VARIABLE = "POLON_SETTINGS_MODULE"
 
 
 def load_settings():
-    """
+    """ Import project's settings module.
+
     Retrieve POLON_SETTINGS_MODULE environment variable and import project's settings module.
-    :return settings_module: imported settings module
+    :return: Imported settings module
     """
     try:
         settings_module_path = os.environ[ENVIRONMENT_VARIABLE]
