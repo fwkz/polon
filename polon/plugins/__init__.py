@@ -14,7 +14,8 @@ class CurrentTestHandlers(Plugin):
         super(CurrentTestHandlers, self).configure(options, conf)
 
     def beforeTest(self, test):
-        loader.current_test = ".".join([test.address()[1], "handlers"])
+        test_package_path, _, _ = test.address()[1].rpartition(".")
+        loader.current_test_handlers_module_path = "{}.handlers".format(test_package_path)
 
     def afterTest(self, test):
-        loader.current_test = None
+        loader.current_test_handlers_module_path = None
