@@ -23,7 +23,18 @@ class Scenario(object):
 
 
 class ScenarioFactory(object):
+    """ Scenario factory.
+
+    Generate Scenario instances based on config file.
+    """
+
     def __init__(self, config_path=""):
+        """ Factory setup.
+
+        :param config_path: Path to the config file. If not given factory uses current_test_config_path
+         set by PolonInterceptor nose plugin.
+        :return:
+        """
         if not config_path:
             config_path = current_test_config_path
 
@@ -33,7 +44,14 @@ class ScenarioFactory(object):
         self.sections = ConfigObj(config_path)
 
         self.scenarios = []
+        self.set_up()
 
+    def set_up(self):
+        """ Custom setup method
+
+        Override this method if you want custom ScenarioFactory behaviour.
+        :return:
+        """
         for section_name, section_body in self.sections.iteritems():
             scenario = Scenario(section_name, section_body)
             self.scenarios.append(scenario)
