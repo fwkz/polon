@@ -4,7 +4,7 @@ from inspect import getmembers, isclass
 from polon.core.handlers import PageHandler
 
 
-current_test_handlers_module_path = None  # Set before each test by Polon nose plugin at runtime.
+current_test_handlers_module_path = None  # Set at runtime before each test by Polon nose plugin.
 
 
 def load_handlers():
