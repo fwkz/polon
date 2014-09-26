@@ -1,6 +1,9 @@
 import os
+import importlib
 
 from configobj import ConfigObj
+
+from polon.conf import settings
 
 
 current_test_config_path = None
@@ -14,8 +17,18 @@ class Scenario(object):
 
     def __init__(self, section_name, section_body):
         self.section_name = section_name  # section name attr only for __repr__
+        self.scenario_data = {}
 
-        for key, value in section_body.iteritems():
+        # Applying SCENARIO_PROCESSORS
+        for processor_path in settings.SCENARIO_PROCESSORS:
+            module_name, processor_name = processor_path.rsplit(".", 1)
+            module = importlib.import_module(module_name)
+            processor = getattr(module, processor_name)
+            self.scenario_data.update(processor())  # Executing actual processor.
+
+        self.scenario_data.update(section_body)
+
+        for key, value in self.scenario_data.iteritems():
             setattr(self, key, value)
 
     def __repr__(self):

@@ -7,3 +7,5 @@ https://github/fwkz/polon
 """
 
 PAGE_OBJECTS_MODULE = "${project_name}.pages"
+
+SCENARIO_PROCESSORS = ()
