@@ -6,6 +6,12 @@ class PageHandler:
     Base class for page object handlers implemented using Abstract Base Classes.
     """
     __metaclass__ = ABCMeta
+    use_with = []
+
+    def __init__(self, driver, scenario):
+        self.driver = driver
+        self.scenario = scenario
+        self.page_object = self.page_object(driver, scenario)
 
     @abstractproperty
     def page_object(self):

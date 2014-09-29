@@ -17,3 +17,7 @@ class PowerPage(object):
     Base class for Page Objects
     """
     __metaclass__ = IdentifierAggregatorMetaclass
+
+    def __init__(self, driver, scenario):
+        self.driver = driver
+        self.scenario = scenario
