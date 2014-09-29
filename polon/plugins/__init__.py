@@ -1,7 +1,7 @@
 import os
 
 from nose.plugins import Plugin
-from polon.core.handlers import loader
+from polon.core.handlers import loaders
 from polon import scenarios
 
 
@@ -20,9 +20,9 @@ class PolonInterceptor(Plugin):
 
     def beforeTest(self, test):
         test_package_path, _, _ = test.address()[1].rpartition(".")
-        loader.current_test_handlers_module_path = "{}.handlers".format(test_package_path)
+        loaders.current_test_handlers_module_path = "{}.handlers".format(test_package_path)
         scenarios.current_test_config_path = os.path.join(os.path.dirname(test.address()[0]), "config.cfg")
 
     def afterTest(self, test):
-        loader.current_test_handlers_module_path = None
+        loaders.current_test_handlers_module_path = None
         scenarios.current_test_config_path = None

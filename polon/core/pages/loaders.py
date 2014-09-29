@@ -57,7 +57,7 @@ def load_pages():
 
         pages.update(loader_function(parameters))
 
-    if err_count != len(page_loaders):
+    if err_count == len(page_loaders):
         raise ImproperlyConfigured("Page objects configuration not found. "
                                    "Please set PAGE_OBJECTS_DIRS or PAGE_OBJECTS_MODULE settings attribute.")
 
