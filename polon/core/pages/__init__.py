@@ -18,6 +18,12 @@ class PowerPage(object):
     """
     __metaclass__ = IdentifierAggregatorMetaclass
 
+    path = None
+
     def __init__(self, driver, scenario):
+
+        if not self.path:
+            raise NotImplementedError("{} Please set the *path* attribute.".format(self))
+
         self.driver = driver
         self.scenario = scenario
