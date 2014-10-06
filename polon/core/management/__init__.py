@@ -13,8 +13,9 @@ def execute_command(argument_values):
     parser = argparse.ArgumentParser(description='Management tool.')
     parser.add_argument('--add-tests', type=str, nargs="*", help='Add tests to the project.')
     parser.add_argument('--settings', type=str, help='Declaring location of settings module.')
-    parser.add_argument('--pythonpath', type=str, help='Declaring location of project')
-    args = parser.parse_args(argument_values[1:])  # sys.argv[1:]
+    parser.add_argument('--pythonpath', type=str, help='Declaring location of project.')
+    parser.add_argument('--run', action='store_true', help='Execute nose test run.')
+    args, nose_arg = parser.parse_known_args(argument_values[1:])  # sys.argv[1:]
 
     if args.settings:
         os.environ["POLON_SETTINGS_MODULE"] = args.settings
@@ -25,8 +26,12 @@ def execute_command(argument_values):
     if args.add_tests:
         from polon.core.management.commands import add_tests
         add_tests(*args.add_tests)
-    else:
-        print("What do you want me to do?")
+
+    if args.run:
+        import nose
+        from polon.plugins import PolonInterceptor
+        nose.main(argv=[argument_values[0], "--with-polon-interceptor"] + nose_arg,
+                  addplugins=[PolonInterceptor()])
 
 
 def execute_admin_command(argument_values):
