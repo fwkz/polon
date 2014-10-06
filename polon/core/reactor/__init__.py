@@ -6,6 +6,7 @@ from selenium import webdriver
 from polon.core.pages.loaders import load_pages
 from polon.core.handlers.loaders import load_handlers
 from polon.conf import settings
+from polon.core.exceptions import HandlerError, ReactorError
 
 
 class Reactor(object):
@@ -63,7 +64,7 @@ class Reactor(object):
             if self.previous_page == self.currentpage:
                 counter += 1
                 if counter == settings.RERUN_FACTOR:
-                    raise SystemError("Reactor stuck on: {}".format(self.currentpage))
+                    raise ReactorError("Reactor stuck on: {}".format(self.currentpage))
 
             try:
                 self.execute_handler()  # Handle the current page.
@@ -104,14 +105,14 @@ class Reactor(object):
 
         # Checking if there is only one universal handler without 'use_with' attribute
         if len(handlers_without_usewith) > 1:
-            raise SystemError(
+            raise HandlerError(
                 "Multiple handler definition with no 'use_with' attribute for {}".format(self.currentpage))
 
         # Checking if 'use_with' attributes is unique in each handlers.
         if list_of_use_with_lists:
             c = Counter(itertools.chain(*list_of_use_with_lists))
             if c.most_common(1).pop()[1] > 1:
-                raise SystemError(
+                raise HandlerError(
                     "Scenario '{}' has ambiguous handlers definition for {}".format(self.scenario.section_name,
                                                                                     self.currentpage))
 
