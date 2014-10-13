@@ -8,9 +8,8 @@ import socket
 from command_handlers import *
 from parser import parse_message
 
-HOST = 'localhost'
-PORT = 50505
-SOCKET = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+from polon.conf import settings
+
 
 COMMAND_HANDLERS = {
     'PUT': handle_put,
@@ -26,7 +25,9 @@ COMMAND_HANDLERS = {
 
 def main():
     """Main entry point for script."""
-    SOCKET.bind((HOST, PORT))
+    SOCKET = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    SOCKET.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    SOCKET.bind(settings.STASH_ADDRESS)
     SOCKET.listen(1)
 
     while 1:
@@ -46,6 +47,9 @@ def main():
         update_stats(command, response[0])
         connection.sendall('{}; {}'.format(response[0], response[1]))
         connection.close()
+
+    SOCKET.shutdown(socket.SHUT_RDWR)
+    SOCKET.close()
 
 if __name__ == '__main__':
     main()
