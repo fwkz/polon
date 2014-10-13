@@ -1,8 +1,10 @@
 import os
+import threading
 
 from nose.plugins import Plugin
 from polon.core.handlers import loaders
 from polon import scenarios
+from polon.stash import main
 
 
 class PolonInterceptor(Plugin):
@@ -17,6 +19,11 @@ class PolonInterceptor(Plugin):
 
     name = "polon-interceptor"
     score = 1
+
+    def prepareTest(self, test):
+        stash = threading.Thread(target=main)
+        stash.setDaemon(True)
+        stash.start()
 
     def startContext(self, context):
         """ Set attributes for tests that are lazy loaded from generator.

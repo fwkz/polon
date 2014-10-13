@@ -1,13 +1,12 @@
 import socket
 
-HOST = 'localhost'
-PORT = 50505
+from polon.conf import settings
 
 
 def repl():
     while 1:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((HOST, PORT))
+        s.connect(settings.STASH_ADDRESS)
         input_stream = raw_input(">> ")
         s.sendall(input_stream)
         data = s.recv(1024)
@@ -24,10 +23,10 @@ class StashClient(object):
 
     def __execute(self, method, key, value='', value_type=''):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((HOST, PORT))
+        s.connect(settings.STASH_ADDRESS)
         s.sendall(";".join([method, key, value, value_type]))
-        data = self.s.recv(1024)
-        self.s.close()
+        data = s.recv(1024)
+        s.close()
         return data
 
 if __name__ == "__main__":

@@ -11,3 +11,5 @@ PAGE_OBJECTS_MODULE = "${project_name}.pages"
 SCENARIO_PROCESSORS = ()
 
 RERUN_FACTOR = 10
+
+STASH_ADDRESS = ("localhost", 50505)
