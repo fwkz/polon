@@ -21,6 +21,12 @@ class PolonInterceptor(Plugin):
     score = 1
 
     def prepareTest(self, test):
+        """ Start Stash server.
+
+        Spawn daemon thread with Stash server.
+        :param test: the test case (nose.case.Test)
+        :return:
+        """
         stash = threading.Thread(target=main)
         stash.setDaemon(True)
         stash.start()
