@@ -1,8 +1,10 @@
 import os
 import threading
+import sys
 
 from nose.plugins import Plugin
 from polon.core.handlers import loaders
+from polon.core.pages.loaders import load_pages
 from polon import scenarios
 from polon.stash import main
 
@@ -27,6 +29,15 @@ class PolonInterceptor(Plugin):
         :param test: the test case (nose.case.Test)
         :return:
         """
+        sys.stdout.write("Validating pages... ")
+        for page in load_pages():
+            try:
+                page(None, None)
+            except NotImplementedError as err:
+                sys.stdout.write("\n")
+                raise err
+        sys.stdout.write("ok\n")
+
         stash = threading.Thread(target=main)
         stash.setDaemon(True)
         stash.start()
