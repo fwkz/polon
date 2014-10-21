@@ -8,9 +8,14 @@ from polon.core.handlers.loaders import load_handlers
 from polon.conf import settings
 from polon.core.exceptions import HandlerError, ReactorError
 
+try:
+    ENTRY_URL = settings.DEFAULT_ENTRY_URL
+except AttributeError:
+    ENTRY_URL = None
+
 
 class Reactor(object):
-    def __init__(self, exit_point, scenario, entry_url=None):
+    def __init__(self, exit_point, scenario, entry_url=ENTRY_URL):
         self.exit_point = exit_point
         self.scenario = scenario
         self.entry_url = entry_url
