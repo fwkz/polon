@@ -3,7 +3,6 @@ from inspect import getmembers, isclass
 import pkgutil
 
 from polon.conf import settings
-from polon.core.pages import PowerPage
 from polon.core.exceptions import ImproperlyConfigured
 
 
@@ -14,9 +13,12 @@ def load_pages_from_module(path):
     :param path: Module dotted path.
     :return: Set of retrieved pages.
     """
+    base_class_module, base_class = settings.PAGE_BASE_CLASS.rsplit(".", 1)
+    base_class = getattr(importlib.import_module(base_class_module), base_class)
+
     po_module = importlib.import_module(path)
     pages_set = {module[1] for module in getmembers(po_module, isclass)}
-    pages_set = {class_ for class_ in pages_set if (issubclass(class_, PowerPage) and class_ is not PowerPage)}
+    pages_set = {class_ for class_ in pages_set if (issubclass(class_, base_class) and class_ is not base_class)}
     return pages_set
 
 

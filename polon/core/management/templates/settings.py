@@ -13,3 +13,5 @@ SCENARIO_PROCESSORS = ()
 RERUN_FACTOR = 10
 
 STASH_ADDRESS = ("localhost", 50505)
+
+PAGE_BASE_CLASS = "polon.core.pages.PowerPage"

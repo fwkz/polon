@@ -7,6 +7,7 @@ from polon.core.handlers import loaders
 from polon.core.pages.loaders import load_pages
 from polon import scenarios
 from polon.stash import main
+from polon.core.pages import AbstractPage
 
 
 class PolonInterceptor(Plugin):
@@ -31,11 +32,9 @@ class PolonInterceptor(Plugin):
         """
         sys.stdout.write("Validating pages... ")
         for page in load_pages():
-            try:
-                page(None, None)
-            except NotImplementedError as err:
+            if not issubclass(page, AbstractPage):
                 sys.stdout.write("\n")
-                raise err
+                raise NotImplementedError("{} Please set the *path* attribute.".format(page))
         sys.stdout.write("ok\n")
 
         stash = threading.Thread(target=main)
