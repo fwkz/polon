@@ -24,9 +24,3 @@ def socket_connection(address):
     s.connect(address)
     yield s
     s.close()
-
-
-if __name__ == "__main__":
-    stash = StashClient()
-    print stash.put('kapucyn', ["lista", "kapucynow"])
-    print stash.get("kapucyn")[1]
