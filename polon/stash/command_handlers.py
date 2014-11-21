@@ -1,8 +1,6 @@
 STATS = {
     'PUT': {'success': 0, 'error': 0},
     'GET': {'success': 0, 'error': 0},
-    'GETLIST': {'success': 0, 'error': 0},
-    'PUTLIST': {'success': 0, 'error': 0},
     'INCREMENT': {'success': 0, 'error': 0},
     'APPEND': {'success': 0, 'error': 0},
     'DELETE': {'success': 0, 'error': 0},
@@ -35,24 +33,6 @@ def handle_get(key):
         return False, 'ERROR: Key [{}] not found'.format(key)
     else:
         return True, DATA[key]
-
-
-def handle_putlist(key, value):
-    """Return a tuple containing True if the command succeeded and the message
-    to send back to the client."""
-    return handle_put(key, value)
-
-
-def handle_getlist(key):
-    """Return a tuple containing True if the key contained a list and
-    the message to send back to the client."""
-    return_value = exists, value = handle_get(key)
-    if not exists:
-        return return_value
-    elif not isinstance(value, list):
-        return False, 'ERROR: Key [{}] contains non-list value ([{}])'.format(key, value)
-    else:
-        return return_value
 
 
 def handle_increment(key):
