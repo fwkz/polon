@@ -1,31 +1,50 @@
 from collections import Counter
 import itertools
+from importlib import import_module
 
 from selenium import webdriver
 
 from polon.core.pages.loaders import load_pages
 from polon.core.handlers.loaders import load_handlers
-from polon.conf import settings
-from polon.core.exceptions import HandlerError, ReactorError
 
-try:
-    ENTRY_URL = settings.DEFAULT_ENTRY_URL
-except AttributeError:
-    ENTRY_URL = None
+from polon.core.exceptions import HandlerError, ReactorError
 
 
 class Reactor(object):
-    def __init__(self, exit_point, scenario, entry_url=ENTRY_URL):
+    def __init__(self, exit_point, scenario, entry_url=None, pages=None, handlers=None, settings=True):
         self.exit_point = exit_point
         self.scenario = scenario
-        self.entry_url = entry_url
-
-        self.driver = webdriver.Firefox()
         self.currentpage = None
         self.previous_page = None
 
-        self.pages = load_pages()
-        self.handlers = load_handlers()
+        self.settings = getattr(import_module("polon.conf"), "settings") if settings else None
+
+        if entry_url:
+            self.entry_url = entry_url
+        else:
+            try:
+                self.entry_url = self.settings.DEFAULT_ENTRY_URL
+            except AttributeError:
+                raise AttributeError("Provide entry URL")
+
+        if pages:
+            self.pages = pages
+        else:
+            try:
+                self.pages = load_pages()
+                print self.pages
+            except AttributeError:
+                raise AttributeError("Provide set of page objects.")
+
+        if handlers:
+            self.handlers = handlers
+        else:
+            try:
+                self.handlers = load_handlers()
+            except AttributeError:
+                raise AttributeError("Provide set of page handlers.")
+
+        self.driver = webdriver.Firefox()
 
     def where_am_i(self):
         """Determine which Page Object is currently loaded into webdriver.
@@ -65,10 +84,15 @@ class Reactor(object):
         self.currentpage = self.where_am_i()
         counter = 0
 
+        try:
+            rerun_factor = self.settings.RERUN_FACTOR
+        except AttributeError:
+            rerun_factor = 10
+
         while self.currentpage != self.exit_point:
             if self.previous_page == self.currentpage:
                 counter += 1
-                if counter == settings.RERUN_FACTOR:
+                if counter == rerun_factor:
                     raise ReactorError("Reactor stuck on: {}".format(self.currentpage))
 
             try:
