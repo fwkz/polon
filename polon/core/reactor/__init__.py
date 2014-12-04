@@ -4,14 +4,11 @@ from importlib import import_module
 
 from selenium import webdriver
 
-from polon.core.pages.loaders import load_pages
-from polon.core.handlers.loaders import load_handlers
-
 from polon.core.exceptions import HandlerError, ReactorError
 
 
 class Reactor(object):
-    def __init__(self, exit_point, scenario, entry_url=None, pages=None, handlers=None, settings=True):
+    def __init__(self, exit_point, scenario, entry_url=None, pages=None, handlers=None, settings=True, driver=None):
         self.exit_point = exit_point
         self.scenario = scenario
         self.currentpage = None
@@ -31,8 +28,8 @@ class Reactor(object):
             self.pages = pages
         else:
             try:
+                from polon.core.pages.loaders import load_pages
                 self.pages = load_pages()
-                print self.pages
             except AttributeError:
                 raise AttributeError("Provide set of page objects.")
 
@@ -40,11 +37,15 @@ class Reactor(object):
             self.handlers = handlers
         else:
             try:
+                from polon.core.handlers.loaders import load_handlers
                 self.handlers = load_handlers()
             except AttributeError:
                 raise AttributeError("Provide set of page handlers.")
 
-        self.driver = webdriver.Firefox()
+        if driver:
+            self.driver = driver
+        else:
+            self.driver = webdriver.Firefox()
 
     def where_am_i(self):
         """Determine which Page Object is currently loaded into webdriver.
