@@ -14,7 +14,7 @@ def load_pages_from_module(path, base_class_path=None):
     """
     if not base_class_path:
         from polon.conf import settings
-        base_class_path = settings.PAGE_BASE_CLASS.rsplit(".", 1)
+        base_class_path = settings.PAGE_BASE_CLASS
 
     base_class_module, base_class = base_class_path.rsplit(".", 1)
     base_class = getattr(importlib.import_module(base_class_module), base_class)
@@ -40,6 +40,7 @@ def load_pages_from_package(page_object_dirs, base_class_path=None):
         for module_path in modules:
             pages_set.update(load_pages_from_module(module_path, base_class_path))
     return pages_set
+
 
 def load_pages():
     """ Retrieve page objects from all over the project.
