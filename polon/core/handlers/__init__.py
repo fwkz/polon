@@ -8,10 +8,11 @@ class PageHandler:
     __metaclass__ = ABCMeta
     use_with = []
 
-    def __init__(self, driver, scenario):
+    def __init__(self, driver, scenario, referer=None):
         self.driver = driver
         self.scenario = scenario
         self.page_object = self.page_object(driver, scenario)
+        self.referer = referer
 
     @abstractproperty
     def page_object(self):

@@ -152,7 +152,7 @@ class Reactor(object):
 
         for handler in possible_handlers:
             if self.scenario.section_name in handler.use_with:
-                handler(self.driver, self.scenario).execute()
+                handler(self.driver, self.scenario, referer=self.previous_page).execute()
                 break
         else:
-            universal_handler(self.driver, self.scenario).execute()
+            universal_handler(self.driver, self.scenario, referer=self.previous_page).execute()
