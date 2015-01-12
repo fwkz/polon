@@ -56,7 +56,7 @@ class Reactor(object):
         current_path = self.driver.current_url
         current_html = self.driver.page_source
 
-        possible_match_from_path = {page for page in self.pages if page.path in current_path}
+        possible_match_from_path = {page for page in self.pages if page.path.lower() in current_path.lower()}
 
         if len(possible_match_from_path) == 1:
             return possible_match_from_path.pop()
