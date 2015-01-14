@@ -6,6 +6,8 @@ https://github/fwkz/polon
 
 """
 
+DEBUG = True
+
 PAGE_OBJECTS_MODULE = "${project_name}.pages"
 
 SCENARIO_PROCESSORS = ()

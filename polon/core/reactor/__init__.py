@@ -3,16 +3,19 @@ import itertools
 from importlib import import_module
 
 from selenium import webdriver
+import inspect
 
 from polon.core.exceptions import HandlerError, ReactorError
 
 
 class Reactor(object):
-    def __init__(self, exit_point, scenario, entry_url=None, pages=None, handlers=None, settings=True, driver=None):
+    def __init__(self, exit_point, scenario, entry_url=None, pages=None, handlers=None, settings=True, driver=None,
+                 debug=None):
         self.exit_point = exit_point
         self.scenario = scenario
         self.currentpage = None
         self.previous_page = None
+        self.caller_function = inspect.stack()[1][3]
 
         self.settings = getattr(import_module("polon.conf"), "settings") if settings else None
 
@@ -41,6 +44,14 @@ class Reactor(object):
                 self.handlers = load_handlers()
             except AttributeError:
                 raise AttributeError("Provide set of page handlers.")
+
+        if debug:
+            self.debug = True
+        else:
+            try:
+                self.debug = self.settings.DEBUG
+            except AttributeError:
+                raise AttributeError("Please provide DEBUG setting.")
 
         if driver:
             self.driver = driver
@@ -143,16 +154,37 @@ class Reactor(object):
             c = Counter(itertools.chain(*list_of_use_with_lists))
             if c.most_common(1).pop()[1] > 1:
                 raise HandlerError(
-                    "Scenario '{}' has ambiguous handlers definition for {}".format(self.scenario.section_name,
-                                                                                    self.currentpage))
+                    "Test '{}' has ambiguous handlers definition for {}".format(self.caller_function,
+                                                                                self.currentpage))
 
         # Sort possible_handlers and retrieve universal handler without "use_with" attribute.
         possible_handlers = sorted(possible_handlers, key=lambda x: x.use_with, reverse=True)
         universal_handler = possible_handlers.pop()
 
+        self.add_debug_info("Page Object: {}".format(self.currentpage))
         for handler in possible_handlers:
-            if self.scenario.section_name in handler.use_with:
+            if self.caller_function in handler.use_with:
+                self.add_debug_info("Executed handler: {}".format(handler))
                 handler(self.driver, self.scenario, referer=self.previous_page).execute()
                 break
         else:
+            self.add_debug_info("Executed handler: {}".format(universal_handler))
             universal_handler(self.driver, self.scenario, referer=self.previous_page).execute()
+
+    def add_debug_info(self, message):
+        """Add debug info into browser window.
+
+        Execute JS script that append <div> with debug info, after <body> tag.
+
+        Args:
+            msg - custom debug info
+        """
+        if self.settings.DEBUG:
+            script = """var debugInfoContainer = document.createElement('div');\
+            debugInfoContainer.innerHTML = "{message}";\
+            debugInfoContainer.align = 'center';\
+            debugInfoContainer.style.color = 'blue';\
+            document.body.insertBefore(debugInfoContainer, document.body.firstChild);"""
+
+            self.driver.execute_script(script.format(message=str(message).replace("<", "").replace(">", "")))
+
